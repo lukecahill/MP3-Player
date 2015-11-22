@@ -55,6 +55,7 @@
     <Compile Include="ListBoxItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialisation.cs" />
     <EmbeddedResource Include="interfaceForm.resx">
       <DependentUpon>interfaceForm.cs</DependentUpon>
     </EmbeddedResource>

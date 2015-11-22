@@ -58,24 +58,12 @@ namespace Music_Player {
                 label1.Visible = true;
                 pauseBtn.Enabled = true;
 
-                string[] playing = listBox1.SelectedItem.ToString().Split('\\');
-                string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
-                label1.Text = "Now Playing:    " + nowplaying.First();
+                SetNowPlayingText();
 
-                ListBoxItem item = (ListBoxItem)listBox1.SelectedItem;
+                var item = (ListBoxItem)listBox1.SelectedItem;
                 player.open(item.Path);
                 player.play();
-
-                if (listBox1.SelectedIndex == (listBox1.Items.Count - 1)) {
-                    nextBtn.Enabled = false;
-                    previousBtn.Enabled = true;
-                } else if (listBox1.SelectedIndex == 0) {
-                    previousBtn.Enabled = false;
-                    nextBtn.Enabled = true;
-                } else {
-                    nextBtn.Enabled = true;
-                    previousBtn.Enabled = true;
-                }
+                PreviousNextEnabled();
             } catch {
                 label1.Visible = false;
                 pauseBtn.Enabled = false;
@@ -122,7 +110,7 @@ namespace Music_Player {
             }
         }
 
-        DialogResult ShowSaveDialog() {
+        private DialogResult ShowSaveDialog() {
             var dialog = new SaveFileDialog();
             dialog.Filter = "Data File (*.dat, *.play) | *.dat, .play";
             var result = dialog.ShowDialog();
@@ -139,28 +127,8 @@ namespace Music_Player {
                 return;
             }
 
-            try {
-                List<string> linesToSave = new List<string>();
-
-                for (var i = 0; listBox1.Items.Count > i; i++) {
-                    listBox1.SelectedIndex = i;
-                    ListBoxItem item = (ListBoxItem)listBox1.SelectedItem;
-                    linesToSave.Add(item.Path);
-                }
-
-
-                //foreach (ListBoxItem i in listBox1.SelectedItem)
-                //{
-                //    linesToSave.Add(line );
-                //}
-
-
-                File.WriteAllLines(filename, linesToSave);
-                MessageBox.Show("Saved");
-            } catch (Exception ex) {
-                MessageBox.Show("Could not open " + filename + " for saving.\nNo access rights to the folder, perhaps?", "FILE SAVING PROBLEM", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                MessageBox.Show("" + ex);
-            }
+            var serialisation = new Serialisation();
+            serialisation.SavePlaylist(listBox1, filename);
         }
 
         private void loadBtn_Click(object sender, EventArgs e) {
@@ -188,36 +156,34 @@ namespace Music_Player {
             timer.Start();
         }
 
-        private void ScrollLabel() {
-            //if (listBox1.SelectedIndex == -1)
-            //{
-            //    label1.Text = "Scollable placeholder";
-            //}
-            //else
-            //{
-            //    string[] playing = listBox1.SelectedItem.ToString().Split('\\');
-            //    string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
-
-            //    string strString = nowplaying.First();
-
-            //    scrll = scrll + 1;
-            //    int iLmt = strString.Length - scrll;
-            //    if (iLmt < nowplaying.Length)
-            //    {
-            //        scrll = 0;
-            //    }
-            //    string str = "Now Playing:    " + nowplaying.First().Substring(scrll, nowplaying.Length);//strString.Substring(scrll, 20);
-            //    label1.Text = str;
-            //}
-        }
-
         private void TimerTick(object sender, EventArgs e) {
-            ScrollLabel();
+            //ScrollLabel();
         }
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e) {
             stopBtn.PerformClick();
             playBtn.PerformClick();
+        }
+
+
+
+        private void SetNowPlayingText() {
+            string[] playing = listBox1.SelectedItem.ToString().Split('\\');
+            string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
+            label1.Text = "Now Playing:    " + nowplaying.First();
+        }
+
+        private void PreviousNextEnabled() {
+            if (listBox1.SelectedIndex == (listBox1.Items.Count - 1)) {
+                nextBtn.Enabled = false;
+                previousBtn.Enabled = true;
+            } else if (listBox1.SelectedIndex == 0) {
+                previousBtn.Enabled = false;
+                nextBtn.Enabled = true;
+            } else {
+                nextBtn.Enabled = true;
+                previousBtn.Enabled = true;
+            }
         }
     }
 }
