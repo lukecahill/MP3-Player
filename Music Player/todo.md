@@ -3,6 +3,6 @@
 > Clean Code
 > Separate functions
 > Interface changes
-> Fix saving of playlists
-> Fix loading of playlists
+> <s>Fix saving of playlists</s>
+> <s>Fix loading of playlists</s>
 > General refactoring of code
