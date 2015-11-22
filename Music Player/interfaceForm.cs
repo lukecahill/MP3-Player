@@ -7,8 +7,8 @@ namespace Music_Player {
     public partial class interfaceForm : Form {
         MusicPlayer player = new MusicPlayer();
         Serialisation serialisation = new Serialisation();
+        Helper helper = new Helper();
         private Timer timer;
-        bool enabled = false;
 
         private string filename = "playlist.dat";
 
@@ -41,15 +41,15 @@ namespace Music_Player {
                     }
                 }
 
-                SetButtons(enabled = true);
-                SetNowPlayingText();
+                helper.SetButtons(false, label1, pauseBtn, stopBtn);
+                helper.SetNowPlayingText(listBox1, label1);
 
                 var item = listBox1.SelectedItem as ListBoxItem;
                 player.open(item.Path);
                 player.play();
-                PreviousNextEnabled();
+                helper.PreviousNextEnabled(listBox1, nextBtn, previousBtn);
             } catch {
-                SetButtons(enabled = false);
+                helper.SetButtons(true, label1, pauseBtn, stopBtn);
                 MessageBox.Show("Not a valid mp3 file!");
             }
         }
@@ -129,35 +129,6 @@ namespace Music_Player {
             playBtn.PerformClick();
         }
 
-        private void SetNowPlayingText() {
-            string[] playing = listBox1.SelectedItem.ToString().Split('\\');
-            string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
-            label1.Text = $"Now Playing:    {nowplaying.First()}";
-        }
 
-        private void PreviousNextEnabled() {
-            if (listBox1.SelectedIndex == (listBox1.Items.Count - 1)) {
-                nextBtn.Enabled = false;
-                previousBtn.Enabled = true;
-            } else if (listBox1.SelectedIndex == 0) {
-                previousBtn.Enabled = false;
-                nextBtn.Enabled = true;
-            } else {
-                nextBtn.Enabled = true;
-                previousBtn.Enabled = true;
-            }
-        }
-
-        private void SetButtons(bool enabled) {
-            if(enabled) {
-                label1.Visible = false;
-                pauseBtn.Enabled = false;
-                stopBtn.Enabled = false;
-            } else {
-                label1.Visible = true;
-                pauseBtn.Enabled = true;
-                stopBtn.Enabled = true;
-            }
-        }
     }
 }
