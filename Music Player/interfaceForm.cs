@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 namespace Music_Player {
     public partial class interfaceForm : Form {
         MusicPlayer player = new MusicPlayer();
+        Serialisation serialisation = new Serialisation();
         private Timer timer;
         private int scroll { get; set; }
 
@@ -26,15 +27,7 @@ namespace Music_Player {
             if (result == DialogResult.OK) {
                 try {
                     foreach (var file in dlg.FileNames) {
-                        var item = new ListBoxItem();
-
-                        string[] playing = file.Split('\\');
-                        string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
-                        item.Text = nowplaying.First();
-                        item.Name = nowplaying.First();
-                        item.Path = file;
-
-                        listBox1.Items.Add(item);
+                        serialisation.SetFilenames(listBox1, file);
                     }
                 } catch {
                     MessageBox.Show("Could not add file");
@@ -48,10 +41,6 @@ namespace Music_Player {
                     if (listBox1.Items.Count >= 1) {
                         listBox1.SelectedIndex = 0;
                     }
-                    //else
-                    //{
-                    //    MessageBox.Show("No music in playlist! Please add some before retrying...");
-                    //}
                 }
 
                 stopBtn.Enabled = true;
@@ -60,7 +49,7 @@ namespace Music_Player {
 
                 SetNowPlayingText();
 
-                var item = (ListBoxItem)listBox1.SelectedItem;
+                var item = listBox1.SelectedItem as ListBoxItem;
                 player.open(item.Path);
                 player.play();
                 PreviousNextEnabled();
@@ -127,26 +116,11 @@ namespace Music_Player {
                 return;
             }
 
-            var serialisation = new Serialisation();
             serialisation.SavePlaylist(listBox1, filename);
         }
 
         private void loadBtn_Click(object sender, EventArgs e) {
-            OpenFileDialog open = new OpenFileDialog();
-            DialogResult result = open.ShowDialog();
-
-            if (result == DialogResult.OK) {
-                var file = open.FileName;
-                try {
-                    listBox1.Items.Clear();
-                    string[] lines = File.ReadAllLines(filename);
-                    foreach (var item in lines) {
-                        listBox1.Items.Add(item);
-                    }
-                } catch (IOException) {
-                    MessageBox.Show("Could not load data!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-            }
+            serialisation.OpenPlaylist(listBox1, filename);
         }
 
         private void Form1_Load(object sender, EventArgs e) {
@@ -170,7 +144,7 @@ namespace Music_Player {
         private void SetNowPlayingText() {
             string[] playing = listBox1.SelectedItem.ToString().Split('\\');
             string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
-            label1.Text = "Now Playing:    " + nowplaying.First();
+            label1.Text = $"Now Playing:    {nowplaying.First()}";
         }
 
         private void PreviousNextEnabled() {
