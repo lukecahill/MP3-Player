@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Music_Player {
@@ -10,7 +8,6 @@ namespace Music_Player {
         MusicPlayer player = new MusicPlayer();
         Serialisation serialisation = new Serialisation();
         private Timer timer;
-        private int scroll { get; set; }
 
         private string filename = "playlist.dat";
 
@@ -88,15 +85,12 @@ namespace Music_Player {
         private void previousBtn_Click(object sender, EventArgs e) {
             try {
                 player.stop();
-                try {
-                    listBox1.SelectedIndex -= 1;
-                } catch {
-                    MessageBox.Show("No more songs in list!");
-                }
-                playBtn.PerformClick();
+                listBox1.SelectedIndex -= 1;
             } catch {
-                MessageBox.Show("Could not play next song");
+                MessageBox.Show("No more songs in list!");
             }
+            playBtn.PerformClick();
+            MessageBox.Show("Could not play next song");
         }
 
         private DialogResult ShowSaveDialog() {
@@ -138,8 +132,6 @@ namespace Music_Player {
             stopBtn.PerformClick();
             playBtn.PerformClick();
         }
-
-
 
         private void SetNowPlayingText() {
             string[] playing = listBox1.SelectedItem.ToString().Split('\\');
