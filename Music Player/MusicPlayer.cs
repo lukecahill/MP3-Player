@@ -7,7 +7,7 @@ namespace Music_Player {
         private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
 
         public void open(string file) {
-            string command = "open \"" + file + "\" type MPEGVideo alias MyMp3";
+            string command = $"open \"{file}\" type MPEGVideo alias MyMp3";
             mciSendString(command, null, 0, 0);
         }
 

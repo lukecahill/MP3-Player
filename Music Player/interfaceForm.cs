@@ -8,6 +8,7 @@ namespace Music_Player {
         MusicPlayer player = new MusicPlayer();
         Serialisation serialisation = new Serialisation();
         private Timer timer;
+        bool enabled = false;
 
         private string filename = "playlist.dat";
 
@@ -40,10 +41,7 @@ namespace Music_Player {
                     }
                 }
 
-                stopBtn.Enabled = true;
-                label1.Visible = true;
-                pauseBtn.Enabled = true;
-
+                SetButtons(enabled = true);
                 SetNowPlayingText();
 
                 var item = listBox1.SelectedItem as ListBoxItem;
@@ -51,9 +49,7 @@ namespace Music_Player {
                 player.play();
                 PreviousNextEnabled();
             } catch {
-                label1.Visible = false;
-                pauseBtn.Enabled = false;
-                stopBtn.Enabled = false;
+                SetButtons(enabled = false);
                 MessageBox.Show("Not a valid mp3 file!");
             }
         }
@@ -149,6 +145,18 @@ namespace Music_Player {
             } else {
                 nextBtn.Enabled = true;
                 previousBtn.Enabled = true;
+            }
+        }
+
+        private void SetButtons(bool enabled) {
+            if(enabled) {
+                label1.Visible = false;
+                pauseBtn.Enabled = false;
+                stopBtn.Enabled = false;
+            } else {
+                label1.Visible = true;
+                pauseBtn.Enabled = true;
+                stopBtn.Enabled = true;
             }
         }
     }
