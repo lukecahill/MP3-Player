@@ -1,43 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Music_Player
-{
-    public partial class interfaceForm : Form
-    {
+namespace Music_Player {
+    public partial class interfaceForm : Form {
         MusicPlayer player = new MusicPlayer();
-        private Timer tmr;
-        private int scrll { get; set; }
-        
+        private Timer timer;
+        private int scroll { get; set; }
+
         private string filename = "playlist.dat";
 
-        public interfaceForm()
-        {
+        public interfaceForm() {
             InitializeComponent();
         }
 
-        private void addMusicBtn_Click(object sender, EventArgs e)
-        {
+        private void addMusicBtn_Click(object sender, EventArgs e) {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = "Music (*.mp3) | *.mp3";
             dlg.Multiselect = true;
             DialogResult result = dlg.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                try
-                {
-                    foreach (String file in dlg.FileNames)
-                    {
-                        ListBoxItem item = new ListBoxItem();
+
+            if (result == DialogResult.OK) {
+                try {
+                    foreach (var file in dlg.FileNames) {
+                        var item = new ListBoxItem();
 
                         string[] playing = file.Split('\\');
                         string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
@@ -47,22 +36,16 @@ namespace Music_Player
 
                         listBox1.Items.Add(item);
                     }
-                }
-                catch
-                {
+                } catch {
                     MessageBox.Show("Could not add file");
                 }
             }
         }
 
-        private void playBtn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (listBox1.SelectedIndex == -1)
-                {
-                    if (listBox1.Items.Count >= 1)
-                    {
+        private void playBtn_Click(object sender, EventArgs e) {
+            try {
+                if (listBox1.SelectedIndex == -1) {
+                    if (listBox1.Items.Count >= 1) {
                         listBox1.SelectedIndex = 0;
                     }
                     //else
@@ -83,24 +66,17 @@ namespace Music_Player
                 player.open(item.Path);
                 player.play();
 
-                if (listBox1.SelectedIndex == (listBox1.Items.Count - 1))
-                {
+                if (listBox1.SelectedIndex == (listBox1.Items.Count - 1)) {
                     nextBtn.Enabled = false;
                     previousBtn.Enabled = true;
-                }
-                else if (listBox1.SelectedIndex == 0)
-                {
+                } else if (listBox1.SelectedIndex == 0) {
                     previousBtn.Enabled = false;
                     nextBtn.Enabled = true;
-                }
-                else
-                {
+                } else {
                     nextBtn.Enabled = true;
                     previousBtn.Enabled = true;
                 }
-            }
-            catch
-            {
+            } catch {
                 label1.Visible = false;
                 pauseBtn.Enabled = false;
                 stopBtn.Enabled = false;
@@ -108,87 +84,65 @@ namespace Music_Player
             }
         }
 
-        private void stopBtn_Click(object sender, EventArgs e)
-        {
+        private void stopBtn_Click(object sender, EventArgs e) {
             player.stop();
             label1.Visible = false;
             pauseBtn.Enabled = false;
         }
 
-        private void pauseBtn_Click(object sender, EventArgs e)
-        {
+        private void pauseBtn_Click(object sender, EventArgs e) {
             player.pause();
         }
 
-        private void nextBtn_Click(object sender, EventArgs e)
-        {
-            try
-            {
+        private void nextBtn_Click(object sender, EventArgs e) {
+            try {
                 player.stop();
-                try
-                {
+                try {
                     listBox1.SelectedIndex += 1;
-                }
-                catch
-                {
+                } catch {
                     MessageBox.Show("No more songs in list!");
                 }
                 playBtn.PerformClick();
-            }
-            catch
-            {
+            } catch {
                 MessageBox.Show("Could not play next song");
             }
         }
 
-        private void previousBtn_Click(object sender, EventArgs e)
-        {
-            try
-            {
+        private void previousBtn_Click(object sender, EventArgs e) {
+            try {
                 player.stop();
-                try
-                {
+                try {
                     listBox1.SelectedIndex -= 1;
-                }
-                catch
-                {
+                } catch {
                     MessageBox.Show("No more songs in list!");
                 }
                 playBtn.PerformClick();
-            }
-            catch
-            {
+            } catch {
                 MessageBox.Show("Could not play next song");
             }
         }
 
-        DialogResult ShowSaveDialog()
-        {
+        DialogResult ShowSaveDialog() {
             var dialog = new SaveFileDialog();
             dialog.Filter = "Data File (*.dat, *.play) | *.dat, .play";
             var result = dialog.ShowDialog();
 
-            if (result == DialogResult.OK)
-            {
+            if (result == DialogResult.OK) {
                 filename = dialog.FileName;
             }
 
             return result;
         }
 
-        private void saveBtn_Click(object sender, EventArgs e)
-        {
-            if (ShowSaveDialog() != DialogResult.OK)
-            {
+        private void saveBtn_Click(object sender, EventArgs e) {
+            if (ShowSaveDialog() != DialogResult.OK) {
                 return;
             }
 
-            try
-            {
+            try {
                 List<string> linesToSave = new List<string>();
 
-                for (int i = 0; listBox1.Items.Count > i ; i++)
-                {
+                for (var i = 0; listBox1.Items.Count > i; i++) {
                     listBox1.SelectedIndex = i;
                     ListBoxItem item = (ListBoxItem)listBox1.SelectedItem;
                     linesToSave.Add(item.Path);
@@ -203,48 +157,38 @@ namespace Music_Player
 
                 File.WriteAllLines(filename, linesToSave);
                 MessageBox.Show("Saved");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MessageBox.Show("Could not open " + filename + " for saving.\nNo access rights to the folder, perhaps?", "FILE SAVING PROBLEM", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 MessageBox.Show("" + ex);
             }
         }
 
-        private void loadBtn_Click(object sender, EventArgs e)
-        {
+        private void loadBtn_Click(object sender, EventArgs e) {
             OpenFileDialog open = new OpenFileDialog();
             DialogResult result = open.ShowDialog();
 
-            if (result == DialogResult.OK)
-            {
-                string file = open.FileName;
-                try
-                {
+            if (result == DialogResult.OK) {
+                var file = open.FileName;
+                try {
                     listBox1.Items.Clear();
                     string[] lines = File.ReadAllLines(filename);
-                    foreach (var item in lines)
-                    {
+                    foreach (var item in lines) {
                         listBox1.Items.Add(item);
                     }
-                }
-                catch (IOException)
-                {
+                } catch (IOException) {
                     MessageBox.Show("Could not load data!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            tmr = new Timer();
-            tmr.Interval = 100;
-            tmr.Tick += new EventHandler(this.TimerTick);
-            tmr.Start();
+        private void Form1_Load(object sender, EventArgs e) {
+            timer = new Timer();
+            timer.Interval = 100;
+            timer.Tick += new EventHandler(this.TimerTick);
+            timer.Start();
         }
 
-        private void ScrollLabel()
-        {
+        private void ScrollLabel() {
             //if (listBox1.SelectedIndex == -1)
             //{
             //    label1.Text = "Scollable placeholder";
@@ -267,13 +211,11 @@ namespace Music_Player
             //}
         }
 
-        private void TimerTick(object sender, EventArgs e)
-        {
+        private void TimerTick(object sender, EventArgs e) {
             ScrollLabel();
         }
 
-        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
+        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e) {
             stopBtn.PerformClick();
             playBtn.PerformClick();
         }
