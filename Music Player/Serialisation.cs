@@ -49,7 +49,10 @@ namespace Music_Player {
         public void WritePlaylist(string filename, List<string> linesToSave) {
             using (var stream = new StreamWriter(filename)) {
                 foreach (var line in linesToSave) {
-                    stream.WriteLine(line);
+                    if (line.Length > 0) {
+                        stream.WriteLine(line);
+                    }
+                    
                 }
                 stream.Flush();
             }
@@ -62,7 +65,9 @@ namespace Music_Player {
                 var text = reader.ReadToEnd();
                 var newLines = re.Split(text);
                 foreach (var item in newLines) {
-                    lines.Add(item);
+                    if(item.Length > 0) {
+                        lines.Add(item);
+                    }
                 }
             }
 
