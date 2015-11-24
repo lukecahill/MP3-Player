@@ -1,13 +1,11 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using System.Windows.Forms;
 
 namespace Music_Player {
     public class Helper {
         public void SetNowPlayingText(ListBox listbox, Label label) {
-            string[] playing = listbox.SelectedItem.ToString().Split('\\');
-            string[] nowplaying = Regex.Split(playing.Last(), ".mp3");
-            label.Text = $"Now Playing:    {nowplaying.First()}";
+            var playing = Path.GetFileName(listbox.SelectedItem.ToString());
+            label.Text = $"Now Playing:    { playing }";
         }
 
         public void PreviousNextEnabled(ListBox listbox, Button nextBtn, Button previousBtn) {

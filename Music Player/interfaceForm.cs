@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 
 namespace Music_Player {
     public partial class interfaceForm : Form {
@@ -17,7 +15,8 @@ namespace Music_Player {
         }
 
         private void addMusicBtn_Click(object sender, EventArgs e) {
-            OpenFileDialog dlg = new OpenFileDialog();
+
+            var dlg = new OpenFileDialog();
             dlg.Filter = "Music (*.mp3) | *.mp3";
             dlg.Multiselect = true;
             DialogResult result = dlg.ShowDialog();
@@ -81,12 +80,15 @@ namespace Music_Player {
         private void previousBtn_Click(object sender, EventArgs e) {
             try {
                 player.stop();
-                listBox1.SelectedIndex -= 1;
+                try {
+                    listBox1.SelectedIndex -= 1;
+                } catch {
+                    MessageBox.Show("No more songs in list!");
+                }
+                playBtn.PerformClick();
             } catch {
-                MessageBox.Show("No more songs in list!");
+                MessageBox.Show("Could not play next song");
             }
-            playBtn.PerformClick();
-            MessageBox.Show("Could not play next song");
         }
 
         private DialogResult ShowSaveDialog() {
@@ -128,7 +130,5 @@ namespace Music_Player {
             stopBtn.PerformClick();
             playBtn.PerformClick();
         }
-
-
     }
 }
