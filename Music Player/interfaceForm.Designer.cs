@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(interfaceForm));
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.playlist = new System.Windows.Forms.ListBox();
             this.addMusicBtn = new System.Windows.Forms.Button();
             this.stopBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -39,21 +39,22 @@
             this.loadBtn = new System.Windows.Forms.Button();
             this.saveBtn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.playBtn = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.clearPlaylist = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listBox1
+            // playlist
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.HorizontalScrollbar = true;
-            this.listBox1.Location = new System.Drawing.Point(203, 118);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(229, 134);
-            this.listBox1.TabIndex = 9;
-            this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            this.playlist.FormattingEnabled = true;
+            this.playlist.HorizontalScrollbar = true;
+            this.playlist.Location = new System.Drawing.Point(203, 154);
+            this.playlist.Name = "playlist";
+            this.playlist.Size = new System.Drawing.Size(229, 134);
+            this.playlist.TabIndex = 9;
+            this.playlist.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             // 
             // addMusicBtn
             // 
@@ -164,18 +165,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Music Controls";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.loadBtn);
-            this.groupBox1.Controls.Add(this.saveBtn);
-            this.groupBox1.Controls.Add(this.addMusicBtn);
-            this.groupBox1.Location = new System.Drawing.Point(203, 33);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(229, 79);
-            this.groupBox1.TabIndex = 15;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Playlist Controls";
-            // 
             // playBtn
             // 
             this.playBtn.Image = ((System.Drawing.Image)(resources.GetObject("playBtn.Image")));
@@ -188,12 +177,35 @@
             this.playBtn.UseVisualStyleBackColor = true;
             this.playBtn.Click += new System.EventHandler(this.playBtn_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.clearPlaylist);
+            this.groupBox1.Controls.Add(this.loadBtn);
+            this.groupBox1.Controls.Add(this.saveBtn);
+            this.groupBox1.Controls.Add(this.addMusicBtn);
+            this.groupBox1.Location = new System.Drawing.Point(203, 33);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(229, 115);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Playlist Controls";
+            // 
+            // clearPlaylist
+            // 
+            this.clearPlaylist.Location = new System.Drawing.Point(148, 79);
+            this.clearPlaylist.Name = "clearPlaylist";
+            this.clearPlaylist.Size = new System.Drawing.Size(75, 23);
+            this.clearPlaylist.TabIndex = 9;
+            this.clearPlaylist.Text = "Clear";
+            this.clearPlaylist.UseVisualStyleBackColor = true;
+            this.clearPlaylist.Click += new System.EventHandler(this.clearPlaylist_Click);
+            // 
             // interfaceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(439, 258);
-            this.Controls.Add(this.listBox1);
+            this.ClientSize = new System.Drawing.Size(439, 300);
+            this.Controls.Add(this.playlist);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -212,7 +224,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox playlist;
         private System.Windows.Forms.Button addMusicBtn;
         private System.Windows.Forms.Button stopBtn;
         private System.Windows.Forms.Label label1;
@@ -224,6 +236,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button playBtn;
+        private System.Windows.Forms.Button clearPlaylist;
     }
 }
 

@@ -19,12 +19,12 @@ namespace Music_Player {
             var dlg = new OpenFileDialog();
             dlg.Filter = "Music (*.mp3) | *.mp3";
             dlg.Multiselect = true;
-            DialogResult result = dlg.ShowDialog();
+            var result = dlg.ShowDialog();
 
             if (result == DialogResult.OK) {
                 try {
                     foreach (var file in dlg.FileNames) {
-                        serialisation.SetFilenames(listBox1, file);
+                        serialisation.SetFilenames(playlist, file);
                     }
                 } catch {
                     MessageBox.Show("Could not add file");
@@ -34,19 +34,19 @@ namespace Music_Player {
 
         private void playBtn_Click(object sender, EventArgs e) {
             try {
-                if (listBox1.SelectedIndex == -1) {
-                    if (listBox1.Items.Count >= 1) {
-                        listBox1.SelectedIndex = 0;
+                if (playlist.SelectedIndex == -1) {
+                    if (playlist.Items.Count >= 1) {
+                        playlist.SelectedIndex = 0;
                     }
                 }
 
                 helper.SetButtons(false, label1, pauseBtn, stopBtn);
-                helper.SetNowPlayingText(listBox1, label1);
+                helper.SetNowPlayingText(playlist, label1);
 
-                var item = listBox1.SelectedItem as ListBoxItem;
+                var item = playlist.SelectedItem as ListBoxItem;
                 player.open(item.Path);
                 player.play();
-                helper.PreviousNextEnabled(listBox1, nextBtn, previousBtn);
+                helper.PreviousNextEnabled(playlist, nextBtn, previousBtn);
             } catch {
                 helper.SetButtons(true, label1, pauseBtn, stopBtn);
                 MessageBox.Show("Not a valid mp3 file!");
@@ -66,28 +66,20 @@ namespace Music_Player {
         private void nextBtn_Click(object sender, EventArgs e) {
             try {
                 player.stop();
-                try {
-                    listBox1.SelectedIndex += 1;
-                } catch {
-                    MessageBox.Show("No more songs in list!");
-                }
+                playlist.SelectedIndex += 1;
                 playBtn.PerformClick();
             } catch {
-                MessageBox.Show("Could not play next song");
+                MessageBox.Show("No more songs in list");
             }
         }
 
         private void previousBtn_Click(object sender, EventArgs e) {
             try {
                 player.stop();
-                try {
-                    listBox1.SelectedIndex -= 1;
-                } catch {
-                    MessageBox.Show("No more songs in list!");
-                }
+                playlist.SelectedIndex -= 1;
                 playBtn.PerformClick();
             } catch {
-                MessageBox.Show("Could not play next song");
+                MessageBox.Show("No more songs in list!");
             }
         }
 
@@ -108,11 +100,11 @@ namespace Music_Player {
                 return;
             }
 
-            serialisation.SavePlaylist(listBox1, filename);
+            serialisation.SavePlaylist(playlist, filename);
         }
 
         private void loadBtn_Click(object sender, EventArgs e) {
-            serialisation.OpenPlaylist(listBox1, filename);
+            serialisation.OpenPlaylist(playlist, filename);
         }
 
         private void Form1_Load(object sender, EventArgs e) {
@@ -129,6 +121,15 @@ namespace Music_Player {
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e) {
             stopBtn.PerformClick();
             playBtn.PerformClick();
+        }
+
+        private void clearPlaylist_Click(object sender, EventArgs e) {
+            var result = MessageBox.Show("Are you sure you wish to clear the current playlist?", "", MessageBoxButtons.OKCancel);
+            if(result == DialogResult.OK) {
+                player.stop();
+                playlist.Items.Clear();
+                helper.SetButtons(false, label1, pauseBtn, stopBtn);
+            }
         }
     }
 }
