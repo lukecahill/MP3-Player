@@ -26,7 +26,7 @@ namespace Music_Player {
             }
         }
 
-        public void OpenPlaylist(ListBox listbox, string filename) {
+        public void OpenPlaylist(ListBox listbox) {
             var open = new OpenFileDialog();
             var result = open.ShowDialog();
 

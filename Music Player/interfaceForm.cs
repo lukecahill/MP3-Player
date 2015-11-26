@@ -8,7 +8,7 @@ namespace Music_Player {
         Helper helper = new Helper();
         private Timer timer;
 
-        private string filename = "playlist.dat";
+        private string filename = "";
 
         public interfaceForm() {
             InitializeComponent();
@@ -104,7 +104,7 @@ namespace Music_Player {
         }
 
         private void loadBtn_Click(object sender, EventArgs e) {
-            serialisation.OpenPlaylist(playlist, filename);
+            serialisation.OpenPlaylist(playlist);
         }
 
         private void Form1_Load(object sender, EventArgs e) {
