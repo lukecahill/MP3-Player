@@ -15,21 +15,7 @@ namespace Music_Player {
         }
 
         private void addMusicBtn_Click(object sender, EventArgs e) {
-
-            var dlg = new OpenFileDialog();
-            dlg.Filter = "Music (*.mp3) | *.mp3";
-            dlg.Multiselect = true;
-            var result = dlg.ShowDialog();
-
-            if (result == DialogResult.OK) {
-                try {
-                    foreach (var file in dlg.FileNames) {
-                        serialisation.SetFilenames(playlist, file);
-                    }
-                } catch {
-                    MessageBox.Show("Could not add file");
-                }
-            }
+			helper.addMusic(playlist);
         }
 
         private void playBtn_Click(object sender, EventArgs e) {
@@ -40,15 +26,18 @@ namespace Music_Player {
                     }
                 }
 
-                helper.SetButtons(false, label1, pauseBtn, stopBtn);
+                helper.setButtons(false, label1, pauseBtn, stopBtn);
                 helper.SetNowPlayingText(playlist, label1);
 
                 var item = playlist.SelectedItem as ListBoxItem;
-                player.open(item.Path);
+				TagLib.File tagFile = TagLib.File.Create(item.Path);
+				albumLabel.Text = tagFile.Tag.Album;
+
+				player.open(item.Path);
                 player.play();
-                helper.PreviousNextEnabled(playlist, nextBtn, previousBtn);
+                helper.previousNextEnabled(playlist, nextBtn, previousBtn);
             } catch {
-                helper.SetButtons(true, label1, pauseBtn, stopBtn);
+                helper.setButtons(true, label1, pauseBtn, stopBtn);
                 MessageBox.Show("Not a valid mp3 file!");
             }
         }
@@ -82,21 +71,9 @@ namespace Music_Player {
                 MessageBox.Show("No more songs in list!");
             }
         }
-
-        private DialogResult ShowSaveDialog() {
-            var dialog = new SaveFileDialog();
-            dialog.Filter = "Data File (*.dat, *.play) | *.dat, .play";
-            var result = dialog.ShowDialog();
-
-            if (result == DialogResult.OK) {
-                filename = dialog.FileName;
-            }
-
-            return result;
-        }
-
+		
         private void saveBtn_Click(object sender, EventArgs e) {
-            if (ShowSaveDialog() != DialogResult.OK) {
+            if (helper.showSaveDialog(filename) != DialogResult.OK) {
                 return;
             }
 
@@ -128,8 +105,8 @@ namespace Music_Player {
             if(result == DialogResult.OK) {
                 player.stop();
                 playlist.Items.Clear();
-                helper.SetButtons(false, label1, pauseBtn, stopBtn);
+                helper.setButtons(false, label1, pauseBtn, stopBtn);
             }
         }
-    }
+	}
 }
