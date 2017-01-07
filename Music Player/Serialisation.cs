@@ -76,8 +76,8 @@ namespace Music_Player {
 
         public void SetFilenames(ListBox listbox, string path) {
             var item = new ListBoxItem();
-
-            var nowplaying = Path.GetFileNameWithoutExtension(path);
+			path.Replace("'", "\\'");
+			var nowplaying = Path.GetFileNameWithoutExtension(path);
             item.Text = nowplaying;
             item.Name = nowplaying;
             item.Path = path;
